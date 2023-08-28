@@ -1,0 +1,15 @@
+{
+  "devDependencies": {
+    "@types/node": "^20.5.7",
+    "compodoc": "^0.0.41",
+    "typescript": "^5.2.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tsc",
+    "build:dev": "npx tsc -w",
+    "start": "node build/index.js",
+    "start:dev": "nodemon build/index.js",
+    "compodoc": "npx compodoc -p tsconfig.json src"
+  }
+}
