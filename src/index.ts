@@ -75,6 +75,8 @@ export function fib(n: number): number {
 }
 
 
+// -------------------------------------------------------------
+
 /** FizzBuzz.
   * @param {number[]} arr Array of numbers.
   * - Loop through input array and return a new array where..
@@ -102,5 +104,99 @@ export function fizzBuzz(arr: number[]) {
   });
 
   return result.join(', ');
+}
+
+
+// -------------------------------------------------------------
+
+// An ID is considered valid if:
+
+// The first 4 characters of the studentId are correct
+// The verification code matches
+// How is the ID code formed:
+// SH: First 2 characters of the students lastname
+// RO: First 2 characters of the student firstname
+// 2022: Full year of joining
+// 08: 2 digit representing the month of joining
+// 01: 2 digits representing the days of joining
+// a verification digit which is computed as the following:
+// Take the numeric part of the studentID without the verification
+// Sum all the digits in the odd positions
+// Sum all the digits in the even position
+// Difference between O & E say this is V
+// If v is a negative ignore the sign
+// if v is greater than 9 divide it by 10 and take the reminder
+//
+// Example ID (valid) = {
+// StudentID: SHRO202208017
+// Firstname: Robert
+// Lastname: Shepherd
+// }
+//
+// Example ID (invalid) = {
+// StudentID: XXRO202208017
+// Firstname: Robert
+// Lastname: Shepherd
+// }
+export function isValid(id: string, firstName: string, lastName: string): boolean {
+  // console.log('isValid(): RUNNING:', firstName, lastName, id);
+
+  // Check input params.
+  if (firstName?.length < 2
+    || lastName?.length < 2
+    || id?.length !== 13) {
+    console.error('isValid(): Bad input');
+    return false;
+  }
+
+  /* Check first 4 characters of the studentId are correct
+   * SH: First 2 characters of the students lastname
+   * RO: First 2 characters of the student firstname */
+  const firstNameChars = firstName.slice(0, 2).toUpperCase();
+  const lastNameChars = lastName.slice(0, 2).toUpperCase();
+  const idStart = id.slice(0, 4);
+  if (idStart !== (lastNameChars + firstNameChars)) {
+    // Bad first 4 chars
+    console.error('isValid(): Bad first 4 chars');
+    return false;
+  }
+
+  // Take the numeric part of the studentID without the verification
+  const idCode = id.slice(4, 12);
+
+  // Sum all the digits in the odd positions
+  let oddSum: number = 0;
+  // Sum all the digits in the even position
+  let evenSum: number = 0;
+  const arr = Array.from(idCode);
+  arr.forEach((v, index) => {
+    const num = Number(v);
+    if (index % 2) {
+      oddSum += num;
+    } else {
+      evenSum += num;
+    }
+  });
+
+  // Difference between O & E say this is V.
+  // If v is a negative ignore the sign
+  let v = Math.abs(evenSum - oddSum);
+
+  // If v is greater than 9 divide it by 10 and take the reminder
+  if (v > 9) {
+    v = v % 10;
+  }
+
+  // Retrieve checkVal from id.
+  const checkVal = id.slice(-1);
+
+  // Verify checkVal === v
+  if (Number(checkVal) !== v) {
+    console.error('isValid(): Bad checkVal', checkVal, v);
+    return false;
+  }
+
+  console.log('isValid(): SUCCESS');
+  return true;
 }
 
